@@ -1,0 +1,12 @@
+{
+  "id": "party-hud",
+  "title": "Party HUD",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "12",
+    "verified": "12"
+  },
+  "scripts": ["scripts/partyhud.js"],
+  "styles": ["styles/partyhud.css"],
+  "flags": { "allowHookEval": true }
+}

@@ -1,0 +1,138 @@
+.partyhud-wrapper {
+  display: flex;
+  height: auto;
+  width: auto;
+  justify-content: center !important;;
+  align-items: end;
+  pointer-events: none;
+  z-index: 99;
+}
+
+.partyhud-rectangle {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  gap: 20px;
+  padding: 8px;
+  pointer-events: none;
+}
+
+/* CHARACTER PANEL */
+.partyhud-character {
+  width: 150px;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: height 0.3s ease;
+  pointer-events: all;
+}
+
+.partyhud-character::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0) 65%, rgb(0, 0, 0) 100%);
+}
+
+.partyhud-character.collapsed::after {
+  height: 24px;
+}
+
+.partyhud-character img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.partyhud-character img:active {
+  transform: scale(0.95);
+}
+
+.partyhud-rectangle.collapsed .partyhud-character {
+  height: 24px;
+}
+
+.partyhud-rectangle.collapsed .partyhud-character img {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.partyhud-name-banner {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8); /* Transparent black */
+  color: white;
+  text-align: center;
+  padding: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 0 0 8px 8px; /* Rounded corners at the bottom */
+  box-sizing: border-box;
+}
+
+/* TOGGLE BUTTON */
+.partyhud-toggle-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: all;
+
+  width: 22px;
+  height: 22px;
+  font-size: 16px;
+  padding: 3px 6px;
+  z-index: 102;
+  margin-bottom: 8px;
+  line-height: 22px;
+  text-align: center;
+  padding: 0;
+
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+
+  cursor: pointer;
+  
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.partyhud-toggle-button:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* JOURNAL BUTTON */
+.partyhud-journal-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+
+  width: 18px;
+  height: 18px;
+  font-size: 14px;
+  z-index: 102;
+  line-height: 18px;
+  text-align: center;
+  padding: 0;
+
+  color: antiquewhite;
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.partyhud-journal-btn:hover {
+  background: rgba(0, 0, 0, 0.199);
+}
