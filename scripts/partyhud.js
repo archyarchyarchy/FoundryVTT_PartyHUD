@@ -7,6 +7,7 @@ Hooks.once('ready', createPartyHUD);
 
 let initialSettings = {};
 
+//#region Settings
 Hooks.once("init", function () {
   game.settings.register("party-hud", "defaultCollapsed", {
     name: "Start Collapsed",
@@ -106,6 +107,7 @@ Hooks.on("closeSettingsConfig", () => {
 
   initialSettings = newSettings;
 });
+//#endregion
 
 function createPartyHUD() {
     /*
@@ -118,8 +120,6 @@ function createPartyHUD() {
       }
         Commented out because my players appear as neither GM nor Player for some reason.
     */
-
-
     // CREATE WRAPPER DIV
     const wrapper = document.createElement("div");
     wrapper.className = "partyhud-wrapper";
@@ -230,6 +230,14 @@ function updatePartyHUD() {
           //console.log("[PartyHUD] INFO: Clicked panel for " + actor.name);
           actor.sheet.render(true);
         });
+      }
+
+      togglebutton = document.querySelector('.partyhud-toggle-button')
+      if (pcs.count > 0) {
+        togglebutton.style.display = "flex";
+      }
+      else {
+        togglebutton.style.display = "none";
       }
 
       partycontainer.appendChild(imgBox);
