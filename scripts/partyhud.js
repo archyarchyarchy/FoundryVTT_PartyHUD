@@ -110,136 +110,143 @@ Hooks.on("closeSettingsConfig", () => {
 //#endregion
 
 function createPartyHUD() {
-    /*
-    if (!game.user?.isGM && !game.user?.isPlayer) {
-        console.log("[PartyHUD] ERROR: User is neither GM nor Player - exiting.")
-        return;
-      }
-      else {
-        console.log("[PartyHUD] INFO: Initializing module...")
-      }
-        Commented out because my players appear as neither GM nor Player for some reason.
-    */
-    // CREATE WRAPPER DIV
-    const wrapper = document.createElement("div");
-    wrapper.className = "partyhud-wrapper";
+  /*
+  if (!game.user?.isGM && !game.user?.isPlayer) {
+      console.log("[PartyHUD] ERROR: User is neither GM nor Player - exiting.")
+      return;
+    }
+    else {
+      console.log("[PartyHUD] INFO: Initializing module...")
+    }
+      Commented out because my players appear as neither GM nor Player for some reason.
+  */
+  // CREATE WRAPPER DIV
+  const wrapper = document.createElement("div");
+  wrapper.className = "partyhud-wrapper";
 
-    // CREATE PARTY CONTAINER
-    const partycontainer = document.createElement("div");
-    partycontainer.className = "partyhud-rectangle";
-    wrapper.appendChild(partycontainer);
+  // CREATE PARTY CONTAINER
+  const partycontainer = document.createElement("div");
+  partycontainer.className = "partyhud-rectangle";
+  wrapper.appendChild(partycontainer);
 
-    // CREATE TOGGLE BUTTON
-    const collapsedByDefault = game.settings.get("party-hud", "defaultCollapsed");
-    const toggleButton = document.createElement('button');
-    toggleButton.className = 'partyhud-toggle-button';
-    toggleButton.textContent = collapsedByDefault ? '▣' : '☰';
+  // CREATE TOGGLE BUTTON
+  const collapsedByDefault = game.settings.get("party-hud-local", "defaultCollapsed");
+  const toggleButton = document.createElement('button');
+  toggleButton.className = 'partyhud-toggle-button';
+  toggleButton.textContent = collapsedByDefault ? '▣' : '☰';
 
-    toggleButton.addEventListener('click', () => {
-      const rectangle = document.querySelector('.partyhud-rectangle');
-      const portraitHeight = game.settings.get("party-hud", "portraitHeight");
-      const isCollapsed = rectangle.classList.toggle('collapsed');
-      const panels = document.querySelectorAll('.partyhud-character');
-      panels.forEach(panel => {
-        panel.style.height = isCollapsed ? "24px" : `${portraitHeight}px`;
-      });
-
-      toggleButton.textContent = isCollapsed ? '▣' : '☰';
+  toggleButton.addEventListener('click', () => {
+    const rectangle = document.querySelector('.partyhud-rectangle');
+    const portraitHeight = game.settings.get("party-hud-local", "portraitHeight");
+    const isCollapsed = rectangle.classList.toggle('collapsed');
+    const panels = document.querySelectorAll('.partyhud-character');
+    panels.forEach(panel => {
+      panel.style.height = isCollapsed ? "24px" : `${portraitHeight}px`;
     });
-  
-    // APPEND WRAPPER
-    const target = document.getElementById("ui-bottom");
-    if (target) {
-      const uiBottom = document.getElementById("ui-bottom");
-      uiBottom.insertBefore(wrapper, uiBottom.firstChild)
-    }
-    else console.error("[PartyHUD] ERROR: Element 'ui-bottom' not found.");
 
-    // FILL IN PARTY
-    updatePartyHUD();
+    toggleButton.textContent = isCollapsed ? '▣' : '☰';
+  });
 
-    // APPEND TOGGLE BUTTON
-    wrapper.appendChild(toggleButton);
+  // APPEND WRAPPER
+  const target = document.getElementById("ui-bottom");
+  if (target) {
+    const uiBottom = document.getElementById("ui-bottom");
+    uiBottom.insertBefore(wrapper, uiBottom.firstChild)
+  }
+  else console.error("[PartyHUD] ERROR: Element 'ui-bottom' not found.");
 
-    // COLLAPSE SETTING
-    if (collapsedByDefault) {
-      partycontainer.classList.toggle('collapsed', isCollapsed);
-      //partycontainer.style.maxHeight = `24px`
-      const panels = document.querySelectorAll('.partyhud-character');
-      panels.forEach(panel => {
-        panel.style.height = isCollapsed ? "24px" : `${portraitHeight}px`;
-      });
-    }
+  // FILL IN PARTY
+  updatePartyHUD();
+
+  // APPEND TOGGLE BUTTON
+  wrapper.appendChild(toggleButton);
+
+  if (game.actors.filter(actor => actor.type === "character" && actor.hasPlayerOwner).length == 0) {
+    toggleButton.style.display = "none"
+  }
+
+  // COLLAPSE SETTING
+  if (collapsedByDefault) {
+    partycontainer.classList.toggle('collapsed', isCollapsed);
+    //partycontainer.style.maxHeight = `24px`
+    const panels = document.querySelectorAll('.partyhud-character');
+    panels.forEach(panel => {
+      panel.style.height = isCollapsed ? "24px" : `${portraitHeight}px`;
+    });
+  }
 }
 
 function updatePartyHUD() {
-    //if (!game.user?.isGM && !game.user?.isPlayer) return;
-    partycontainer = document.querySelector('.partyhud-rectangle');
-    partycontainer.innerHTML = '';
+  //if (!game.user?.isGM && !game.user?.isPlayer) return;
+  partycontainer = document.querySelector('.partyhud-rectangle');
+  partycontainer.innerHTML = '';
 
-    // LOOP THROUGH ACTORS OWNED BY PLAYERS
-    const pcs = game.actors.filter(actor => actor.type === "character" && actor.hasPlayerOwner);
+  // LOOP THROUGH ACTORS OWNED BY PLAYERS
+  const pcs = game.actors.filter(actor => actor.type === "character" && actor.hasPlayerOwner);
 
-    pcs.forEach(actor => {
-      const imgBox = document.createElement("div");
-      imgBox.className = "partyhud-character";
-  
-      const portraitWidth = game.settings.get("party-hud", "portraitWidth");
-      const portraitHeight = game.settings.get("party-hud", "portraitHeight");
-      imgBox.style.width = `${portraitWidth}px`;
-      imgBox.style.height = `${portraitHeight}px`;
+  pcs.forEach(actor => {
+    const imgBox = document.createElement("div");
+    imgBox.className = "partyhud-character";
+    imgBox.id = actor.name;
 
-      // CREATE CHARACTER IMAGE
-      const img = document.createElement("img");
-      img.src = actor.img;
-      img.alt = actor.name;
-      img.title = actor.name;
-      imgBox.appendChild(img);
+    const portraitWidth = game.settings.get("party-hud-local", "portraitWidth");
+    const portraitHeight = game.settings.get("party-hud-local", "portraitHeight");
+    imgBox.style.width = `${portraitWidth}px`;
+    imgBox.style.height = `${portraitHeight}px`;
 
-      // CREATE NAME BANNER
-      const displayNameBar = game.settings.get("party-hud", "enableNameBar");
-      if (displayNameBar) {
-        const nameBanner = document.createElement("div");
-        nameBanner.className = "partyhud-name-banner";
-        nameBanner.textContent = actor.name;
-        imgBox.appendChild(nameBanner);
-      }
-      
-      // CREATE JOURNAL BUTTON
-      const enableJournalButton = game.settings.get("party-hud", "enableJournalButton");
-      if (enableJournalButton) {
-        const journal = game.journal?.contents.find(j => j.name.toLowerCase().replace(' ', '') === actor.name.toLowerCase().replace(' ', ''));
+    // CREATE CHARACTER IMAGE
+    const img = document.createElement("img");
+    img.src = actor.img;
+    img.alt = actor.name;
+    img.title = actor.name;
+    imgBox.appendChild(img);
 
-        if (journal) {
-          const journalBtn = document.createElement("button");
-          journalBtn.textContent = '📓'; //"📓🗒️";
-          journalBtn.className = "partyhud-journal-btn";
-          journalBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            journal.sheet.render(true);
-          });
-          imgBox.appendChild(journalBtn)
-        }
-      }
+    // CREATE NAME BANNER
+    const displayNameBar = game.settings.get("party-hud-local", "enableNameBar");
+    if (displayNameBar) {
+      const nameBanner = document.createElement("div");
+      nameBanner.className = "partyhud-name-banner";
+      nameBanner.textContent = actor.name;
+      imgBox.appendChild(nameBanner);
+    }
+    
+    // CREATE JOURNAL BUTTON
+    const enableJournalButton = game.settings.get("party-hud-local", "enableJournalButton");
+    if (enableJournalButton) {
+      const journal = game.journal?.contents.find(j => j.name.toLowerCase().replace(' ', '') === actor.name.toLowerCase().replace(' ', ''));
 
-      // CLICK TO OPEN SHEET
-      const enableSheetClick = game.settings.get("party-hud", "enableSheetClick");
-      if (enableSheetClick) {
-        imgBox.addEventListener("click", (event) => {
-          event.preventDefault();
-          //console.log("[PartyHUD] INFO: Clicked panel for " + actor.name);
-          actor.sheet.render(true);
+      if (journal) {
+        const journalBtn = document.createElement("button");
+        journalBtn.textContent = '📓'; //"📓🗒️";
+        journalBtn.className = "partyhud-journal-btn";
+        journalBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          journal.sheet.render(true);
         });
+        imgBox.appendChild(journalBtn)
       }
+    }
 
-      togglebutton = document.querySelector('.partyhud-toggle-button')
-      if (pcs.count > 0) {
-        togglebutton.style.display = "flex";
-      }
-      else {
-        togglebutton.style.display = "none";
-      }
+    // CLICK TO OPEN SHEET
+    const enableSheetClick = game.settings.get("party-hud-local", "enableSheetClick");
+    if (enableSheetClick) {
+      imgBox.addEventListener("click", (event) => {
+        event.preventDefault();
+        //console.log("[PartyHUD] INFO: Clicked panel for " + actor.name);
+        actor.sheet.render(true);
+      });
+    }
 
-      partycontainer.appendChild(imgBox);
-    });
-  };
+    partycontainer.appendChild(imgBox);
+  });
+
+  const toggleButton = document.querySelector('.partyhud-toggle-button')
+  if (toggleButton) {
+    if (!pcs || pcs.length == 0) {
+      toggleButton.style.display = "none";
+    }
+    else {
+      toggleButton.style.display = "flex";
+    }
+  }
+};
