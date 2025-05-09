@@ -1,12 +1,17 @@
 {
   "id": "party-hud",
   "title": "Party HUD",
-  "version": "0.1.0",
+  "author": "Archerion",
+  "version": "1.0.0",
   "compatibility": {
     "minimum": "12",
     "verified": "12"
   },
+  "description": "A bottom-of-screen character portrait bar for players.",
   "scripts": ["scripts/partyhud.js"],
   "styles": ["styles/partyhud.css"],
-  "flags": { "allowHookEval": true }
+  "flags": { "allowHookEval": true },
+  "url": "https://github.com/archyarchyarchy/FoundryVTT_PartyHUD",
+  "manifest": "https://raw.githubusercontent.com/archyarchyarchy/FoundryVTT_PartyHUD/main/module.json",
+  "download": "https://github.com/archyarchyarchy/FoundryVTT_PartyHUD/releases/latest/download/module.zip"
 }
