@@ -7,6 +7,41 @@ Hooks.once('ready', createPartyHUD);
 
 let initialSettings = {};
 
+Hooks.on("createChatMessage", (message) => {
+  // Only handle rolls
+  if (!message.isRoll) return;
+
+  const speaker = message.speaker;
+  if (!speaker?.actor) return;
+
+  const actor = game.actors.get(speaker.actor);
+  if (!actor) return;
+
+  // Find the portrait in the HUD
+  const portrait = document.getElementById(actor.id);
+  //const portrait = document.querySelector(
+  //  `.partyhud-rectangle .character-panel[data-actor-id="${actor.id}"]`
+  //);
+  if (!portrait) return;
+
+  // Extract roll result
+  const rollTotal = message.rolls?.[0]?.total ?? null;
+  if (rollTotal === null) return;
+
+  // Create overlay
+  const overlay = document.createElement("div");
+  overlay.classList.add("partyhud-roll-overlay");
+  overlay.innerText = rollTotal;
+
+  portrait.appendChild(overlay);
+
+  // Animate + remove after 2 seconds
+  setTimeout(() => {
+    overlay.classList.add("fade-out");
+    setTimeout(() => overlay.remove(), 500);
+  }, 1500);
+});
+
 //#region Settings
 Hooks.once("init", function () {
   game.settings.register("party-hud", "defaultCollapsed", {
@@ -187,7 +222,10 @@ function updatePartyHUD() {
   pcs.forEach(actor => {
     const imgBox = document.createElement("div");
     imgBox.className = "partyhud-character";
-    imgBox.id = actor.name;
+    imgBox.id = actor.id;
+
+
+    imgBox.dataset.actorId = actor.id
 
     const portraitWidth = game.settings.get("party-hud-local", "portraitWidth");
     const portraitHeight = game.settings.get("party-hud-local", "portraitHeight");
